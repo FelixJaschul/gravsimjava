@@ -16,11 +16,8 @@ public class GravitySimulation extends JPanel implements ActionListener {
     // Gravitational constant
     private static final double G = 6.67430e-11;
 
-    // Timer for animation
-    private Timer timer;
-
     // List of planets
-    private List<Planet> planets;
+    private final List<Planet> planets;
 
     public GravitySimulation() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -28,11 +25,12 @@ public class GravitySimulation extends JPanel implements ActionListener {
 
         // Create planets
         planets = new ArrayList<>();
-        planets.add(new Planet(WIDTH / 3, HEIGHT / 2, 1e15, 0, 10, LIGHT_GRAY));
-        planets.add(new Planet(2 * WIDTH / 3, HEIGHT / 2, 1e15, 0, -10, LIGHT_GRAY));
+        planets.add(new Planet((double) WIDTH / 3, (double) HEIGHT / 2, 1e15, 0, 10, LIGHT_GRAY));
+        planets.add(new Planet((double) (2 * WIDTH) / 3, (double) HEIGHT / 2, 1e15, 0, -10, LIGHT_GRAY));
 
         // Set up timer for animation (60 FPS)
-        timer = new Timer(16, this);
+        // Timer for animation
+        Timer timer = new Timer(16, this);
         timer.start();
     }
 
@@ -181,7 +179,7 @@ public class GravitySimulation extends JPanel implements ActionListener {
 
         public void draw(Graphics2D g) {
             g.setColor(color);
-            int drawRadius = Math.max((int) (radius / 2), 3);
+            int drawRadius = Math.max((radius / 2), 3);
             g.fillOval((int) x - drawRadius, (int) y - drawRadius, drawRadius * 2, drawRadius * 2);
         }
     }
