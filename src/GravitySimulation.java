@@ -14,7 +14,7 @@ public class GravitySimulation extends JPanel implements ActionListener {
     private static final Color LIGHT_GRAY = Color.LIGHT_GRAY;
 
     // Gravitational constant
-    private static final double G = 11.67430e-11; // 6.67430e-11 = standard
+    private static final double G = 6.67430e-11; // 6.67430e-11 = standard
 
     // List of planets
     private final List<Planet> planets;
