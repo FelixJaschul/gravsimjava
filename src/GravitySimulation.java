@@ -8,8 +8,6 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
     private static final int WIDTH = 800; // 800 = standard
     private static final int HEIGHT = 600; // 600 = standard
 
-    private static final boolean color = true;
-
     private static final Color vectorColor = Color.LIGHT_GRAY;
     private static final Color circleColor = Color.LIGHT_GRAY;
     private static final Color backgroundColor = Color.WHITE;
