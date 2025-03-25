@@ -6,15 +6,15 @@ import java.util.List;
 
 public class GravitySimulation extends JPanel implements ActionListener {
     // Screen dimensions
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
+    private static final int WIDTH = 800; // 800 = standard
+    private static final int HEIGHT = 600; // 600 = standard
 
     // Colors
     private static final Color WHITE = Color.WHITE;
     private static final Color LIGHT_GRAY = Color.LIGHT_GRAY;
 
     // Gravitational constant
-    private static final double G = 6.67430e-11;
+    private static final double G = 11.67430e-11; // 6.67430e-11 = standard
 
     // List of planets
     private final List<Planet> planets;
@@ -30,7 +30,7 @@ public class GravitySimulation extends JPanel implements ActionListener {
 
         // Set up timer for animation (60 FPS)
         // Timer for animation
-        Timer timer = new Timer(16, this);
+        Timer timer = new Timer(16, this); // 16 = standard
         timer.start();
     }
 
@@ -73,9 +73,7 @@ public class GravitySimulation extends JPanel implements ActionListener {
 
         // Avoid division by zero
         double distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 1) {
-            distance = 1;
-        }
+        if (distance < 1) distance = 1;
 
         // Calculate gravitational force
         double force = G * planet1.mass * planet2.mass / (distance * distance);
@@ -93,9 +91,9 @@ public class GravitySimulation extends JPanel implements ActionListener {
 
     private void drawGravitationalField(Graphics2D g, List<Planet> planets) {
         // Grid parameters
-        int gridSpacing = 25;
-        double maxVectorLength = 50; // Maximum length of vector
-        double maxInfluenceDistance = 300; // Maximum distance to draw vectors
+        int gridSpacing = 15; // 25 = standard
+        double maxVectorLength = 50; // 50 = standard
+        double maxInfluenceDistance = 300; // 300 == standard
 
         g.setColor(LIGHT_GRAY);
 
