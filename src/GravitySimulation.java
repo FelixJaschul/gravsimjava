@@ -13,7 +13,6 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
 
     private static final double G = 6.67430e-11; // 6.67430e-11 = standard
 
-    // Distance from center for planets
     private static final int PLANET_OFFSET = 150;
 
     private final List<Planet> planets;
@@ -24,12 +23,10 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(WHITE);
 
-        // Initialize center coordinates
         centerX = WIDTH / 2;
         centerY = HEIGHT / 2;
 
         planets = new ArrayList<>();
-        // Position planets relative to center
         planets.add(new Planet(centerX - PLANET_OFFSET, centerY, 1e15, 0, 10, LIGHT_GRAY));
         planets.add(new Planet(centerX + PLANET_OFFSET, centerY, 1e15, 0, -10, LIGHT_GRAY));
 
