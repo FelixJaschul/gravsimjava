@@ -8,11 +8,11 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
     private static final int WIDTH = 800; // 800 = standard
     private static final int HEIGHT = 600; // 600 = standard
 
-    private static final boolean color = false;
+    private static final boolean color = true;
 
-    private static Color vectorColor;
-    private static Color circleColor;
-    private static Color backgroundColor;
+    private static final Color vectorColor = Color.LIGHT_GRAY;
+    private static final Color circleColor = Color.LIGHT_GRAY;
+    private static final Color backgroundColor = Color.WHITE;
 
     private static final double G = 6.67430e-11; // 6.67430e-11 = standard
 
@@ -23,16 +23,6 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
     private int centerY;
 
     public GravitySimulation() {
-        if (color) {
-            circleColor = Color.LIGHT_GRAY;
-            vectorColor = Color.LIGHT_GRAY;
-            backgroundColor = Color.WHITE;
-        } else {
-            circleColor = Color.WHITE;
-            vectorColor = Color.LIGHT_GRAY;
-            backgroundColor = Color.BLACK;
-        }
-
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(backgroundColor);
 
