@@ -149,8 +149,8 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
                     // Limit vector length
                     magnitude = Math.min(magnitude, maxVectorLength);
 
-                    double nx = totalFx / magnitude;
-                    double ny = totalFy / magnitude;
+                    double nx = totalFx / Math.sqrt(totalFx * totalFx + totalFy * totalFy);
+                    double ny = totalFy / Math.sqrt(totalFx * totalFx + totalFy * totalFy);
 
                     // Draw vector
                     int endX = (int) (x + nx * magnitude);
