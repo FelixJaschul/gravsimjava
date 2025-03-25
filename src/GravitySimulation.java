@@ -10,11 +10,8 @@ public class GravitySimulation extends JPanel implements ActionListener {
     private static final int HEIGHT = 600;
 
     // Colors
-    private static final Color BLACK = Color.WHITE;
-    private static final Color WHITE = Color.LIGHT_GRAY;
-    private static final Color BLUE = Color.BLUE;
-    private static final Color RED = Color.RED;
-    private static final Color GRAY = Color.LIGHT_GRAY;
+    private static final Color WHITE = Color.WHITE;
+    private static final Color LIGHT_GRAY = Color.LIGHT_GRAY;
 
     // Gravitational constant
     private static final double G = 6.67430e-11;
@@ -27,12 +24,12 @@ public class GravitySimulation extends JPanel implements ActionListener {
 
     public GravitySimulation() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setBackground(BLACK);
+        setBackground(WHITE);
 
         // Create planets
         planets = new ArrayList<>();
-        planets.add(new Planet(WIDTH / 3, HEIGHT / 2, 1e15, 0, 10, BLUE));
-        planets.add(new Planet(2 * WIDTH / 3, HEIGHT / 2, 1e15, 0, -10, RED));
+        planets.add(new Planet(WIDTH / 3, HEIGHT / 2, 1e15, 0, 10, LIGHT_GRAY));
+        planets.add(new Planet(2 * WIDTH / 3, HEIGHT / 2, 1e15, 0, -10, LIGHT_GRAY));
 
         // Set up timer for animation (60 FPS)
         timer = new Timer(16, this);
@@ -102,7 +99,7 @@ public class GravitySimulation extends JPanel implements ActionListener {
         double maxVectorLength = 50; // Maximum length of vector
         double maxInfluenceDistance = 300; // Maximum distance to draw vectors
 
-        g.setColor(GRAY);
+        g.setColor(LIGHT_GRAY);
 
         for (int x = 0; x < WIDTH; x += gridSpacing) {
             for (int y = 0; y < HEIGHT; y += gridSpacing) {
