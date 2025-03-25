@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GravitySimulation extends JPanel implements ActionListener {
+public class GravitySimulation extends JPanel implements ActionListener, ComponentListener {
     private static final int WIDTH = 800; // 800 = standard
     private static final int HEIGHT = 600; // 600 = standard
 
@@ -13,18 +13,31 @@ public class GravitySimulation extends JPanel implements ActionListener {
 
     private static final double G = 6.67430e-11; // 6.67430e-11 = standard
 
+    // Distance from center for planets
+    private static final int PLANET_OFFSET = 150;
+
     private final List<Planet> planets;
+    private int centerX;
+    private int centerY;
 
     public GravitySimulation() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(WHITE);
 
+        // Initialize center coordinates
+        centerX = WIDTH / 2;
+        centerY = HEIGHT / 2;
+
         planets = new ArrayList<>();
-        planets.add(new Planet((double) WIDTH / 3, (double) HEIGHT / 2, 1e15, 0, 10, LIGHT_GRAY));
-        planets.add(new Planet((double) (2 * WIDTH) / 3, (double) HEIGHT / 2, 1e15, 0, -10, LIGHT_GRAY));
+        // Position planets relative to center
+        planets.add(new Planet(centerX - PLANET_OFFSET, centerY, 1e15, 0, 10, LIGHT_GRAY));
+        planets.add(new Planet(centerX + PLANET_OFFSET, centerY, 1e15, 0, -10, LIGHT_GRAY));
 
         Timer timer = new Timer(4, this); // 16 = standard
         timer.start();
+
+        // Add component listener to detect resize events
+        addComponentListener(this);
     }
 
     @Override
@@ -49,11 +62,22 @@ public class GravitySimulation extends JPanel implements ActionListener {
                 double dt = 0.05;
                 planets.get(i).updatePosition(accelerations[0], accelerations[1], dt);
                 planets.get(j).updatePosition(accelerations[2], accelerations[3], dt);
-
             }
         }
 
         repaint();
+    }
+
+    // Method to reposition planets around the center
+    private void repositionPlanets() {
+        if (planets.size() >= 2) {
+            // Reposition the first two planets (you can extend this for more planets)
+            planets.get(0).x = centerX - PLANET_OFFSET;
+            planets.get(0).y = centerY;
+
+            planets.get(1).x = centerX + PLANET_OFFSET;
+            planets.get(1).y = centerY;
+        }
     }
 
     private double[] calculateGravitationalForce(Planet planet1, Planet planet2) {
@@ -86,8 +110,11 @@ public class GravitySimulation extends JPanel implements ActionListener {
 
         g.setColor(LIGHT_GRAY);
 
-        for (int x = 0; x < WIDTH; x += gridSpacing) {
-            for (int y = 0; y < HEIGHT; y += gridSpacing) {
+        int width = getWidth();
+        int height = getHeight();
+
+        for (int x = 0; x < width; x += gridSpacing) {
+            for (int y = 0; y < height; y += gridSpacing) {
                 double totalFx = 0;
                 double totalFy = 0;
 
@@ -132,6 +159,24 @@ public class GravitySimulation extends JPanel implements ActionListener {
         }
     }
 
+    // ComponentListener methods
+    @Override
+    public void componentResized(ComponentEvent e) {
+        centerX = getWidth() / 2;
+        centerY = getHeight() / 2;
+
+        repositionPlanets();
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {}
+
+    @Override
+    public void componentShown(ComponentEvent e) {}
+
+    @Override
+    public void componentHidden(ComponentEvent e) {}
+
     private static class Planet {
         double x;
         double y;
@@ -170,7 +215,7 @@ public class GravitySimulation extends JPanel implements ActionListener {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Gravity Simulation");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setResizable(false);
+            frame.setResizable(true);
             frame.add(new GravitySimulation());
             frame.pack();
             frame.setLocationRelativeTo(null);
