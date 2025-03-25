@@ -10,7 +10,9 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
 
     private static final boolean color = false;
 
-    private static Color circleAndVectorColor;
+    private static Color vectorColor;
+    private static Color circleColor;
+    private static Color backgroundColor;
 
     private static final double G = 6.67430e-11; // 6.67430e-11 = standard
 
@@ -21,13 +23,14 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
     private int centerY;
 
     public GravitySimulation() {
-        Color backgroundColor;
         if (color) {
+            circleColor = Color.LIGHT_GRAY;
+            vectorColor = Color.LIGHT_GRAY;
             backgroundColor = Color.WHITE;
-            circleAndVectorColor = Color.LIGHT_GRAY;
         } else {
+            circleColor = Color.WHITE;
+            vectorColor = Color.LIGHT_GRAY;
             backgroundColor = Color.BLACK;
-            circleAndVectorColor = Color.WHITE;
         }
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -37,8 +40,8 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
         centerY = HEIGHT / 2;
 
         planets = new ArrayList<>();
-        planets.add(new Planet(centerX - PLANET_OFFSET, centerY, 1e15, 0, 10, circleAndVectorColor));
-        planets.add(new Planet(centerX + PLANET_OFFSET, centerY, 1e15, 0, -10, circleAndVectorColor));
+        planets.add(new Planet(centerX - PLANET_OFFSET, centerY, 1e15, 0, 10, circleColor));
+        planets.add(new Planet(centerX + PLANET_OFFSET, centerY, 1e15, 0, -10, circleColor));
 
         Timer timer = new Timer(4, this); // 16 = standard
         timer.start();
@@ -120,7 +123,7 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
         double maxVectorLength = 50; // 50 = standard
         double maxInfluenceDistance = 300; // 300 == standard
 
-        g.setColor(circleAndVectorColor);
+        g.setColor(vectorColor);
 
         int width = getWidth();
         int height = getHeight();
@@ -234,4 +237,5 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
             frame.setVisible(true);
         });
     }
+
 }
