@@ -72,13 +72,18 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
     private void repositionPlanets() {
         if (planets.size() >= 2) {
             // Reposition the first two planets (you can extend this for more planets)
-            planets.get(0).x = centerX - PLANET_OFFSET;
-            planets.get(0).y = centerY;
+            planets.getFirst().x = centerX - PLANET_OFFSET;
+            planets.getFirst().y = centerY;
+            planets.get(0).velocityX = 0; // Reset velocity
+            planets.get(0).velocityY = 10; // Reset to initial velocity
 
             planets.get(1).x = centerX + PLANET_OFFSET;
             planets.get(1).y = centerY;
+            planets.get(1).velocityX = 0; // Reset velocity
+            planets.get(1).velocityY = -10; // Reset to initial velocity
         }
     }
+
 
     private double[] calculateGravitationalForce(Planet planet1, Planet planet2) {
         // Calculate distance between planets
