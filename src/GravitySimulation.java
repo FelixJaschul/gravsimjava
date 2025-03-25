@@ -8,8 +8,9 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
     private static final int WIDTH = 800; // 800 = standard
     private static final int HEIGHT = 600; // 600 = standard
 
-    private static final Color WHITE = Color.WHITE;
-    private static final Color LIGHT_GRAY = Color.LIGHT_GRAY;
+    private static final boolean color = false;
+
+    private static Color circleAndVectorColor;
 
     private static final double G = 6.67430e-11; // 6.67430e-11 = standard
 
@@ -20,15 +21,24 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
     private int centerY;
 
     public GravitySimulation() {
+        Color backgroundColor;
+        if (color) {
+            backgroundColor = Color.WHITE;
+            circleAndVectorColor = Color.LIGHT_GRAY;
+        } else {
+            backgroundColor = Color.BLACK;
+            circleAndVectorColor = Color.WHITE;
+        }
+
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
-        setBackground(WHITE);
+        setBackground(backgroundColor);
 
         centerX = WIDTH / 2;
         centerY = HEIGHT / 2;
 
         planets = new ArrayList<>();
-        planets.add(new Planet(centerX - PLANET_OFFSET, centerY, 1e15, 0, 10, LIGHT_GRAY));
-        planets.add(new Planet(centerX + PLANET_OFFSET, centerY, 1e15, 0, -10, LIGHT_GRAY));
+        planets.add(new Planet(centerX - PLANET_OFFSET, centerY, 1e15, 0, 10, circleAndVectorColor));
+        planets.add(new Planet(centerX + PLANET_OFFSET, centerY, 1e15, 0, -10, circleAndVectorColor));
 
         Timer timer = new Timer(4, this); // 16 = standard
         timer.start();
@@ -110,7 +120,7 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
         double maxVectorLength = 50; // 50 = standard
         double maxInfluenceDistance = 300; // 300 == standard
 
-        g.setColor(LIGHT_GRAY);
+        g.setColor(circleAndVectorColor);
 
         int width = getWidth();
         int height = getHeight();
