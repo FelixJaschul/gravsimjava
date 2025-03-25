@@ -107,7 +107,7 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
     }
 
     private void drawGravitationalField(Graphics2D g, List<Planet> planets) {
-        int gridSpacing = 15; // 25 = standard
+        int gridSpacing = 15; // 15 = standard
         double maxVectorLength = 50; // 50 = standard
         double maxInfluenceDistance = 300; // 300 == standard
 
@@ -149,8 +149,8 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
                     // Limit vector length
                     magnitude = Math.min(magnitude, maxVectorLength);
 
-                    double nx = totalFx / Math.sqrt(totalFx * totalFx + totalFy * totalFy);
-                    double ny = totalFy / Math.sqrt(totalFx * totalFx + totalFy * totalFy);
+                    double nx = totalFx / magnitude;
+                    double ny = totalFy / magnitude;
 
                     // Draw vector
                     int endX = (int) (x + nx * magnitude);
