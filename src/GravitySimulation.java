@@ -5,31 +5,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GravitySimulation extends JPanel implements ActionListener {
-    // Screen dimensions
     private static final int WIDTH = 800; // 800 = standard
     private static final int HEIGHT = 600; // 600 = standard
 
-    // Colors
     private static final Color WHITE = Color.WHITE;
     private static final Color LIGHT_GRAY = Color.LIGHT_GRAY;
 
-    // Gravitational constant
     private static final double G = 6.67430e-11; // 6.67430e-11 = standard
 
-    // List of planets
     private final List<Planet> planets;
 
     public GravitySimulation() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(WHITE);
 
-        // Create planets
         planets = new ArrayList<>();
         planets.add(new Planet((double) WIDTH / 3, (double) HEIGHT / 2, 1e15, 0, 10, LIGHT_GRAY));
         planets.add(new Planet((double) (2 * WIDTH) / 3, (double) HEIGHT / 2, 1e15, 0, -10, LIGHT_GRAY));
 
-        // Set up timer for animation (60 FPS)
-        // Timer for animation
         Timer timer = new Timer(16, this); // 16 = standard
         timer.start();
     }
@@ -42,10 +35,7 @@ public class GravitySimulation extends JPanel implements ActionListener {
         // Draw gravitational field vectors
         drawGravitationalField(g2d, planets);
 
-        // Draw planets
-        for (Planet planet : planets) {
-            planet.draw(g2d);
-        }
+        for (Planet planet : planets) planet.draw(g2d);
     }
 
     @Override
@@ -62,7 +52,6 @@ public class GravitySimulation extends JPanel implements ActionListener {
             }
         }
 
-        // Repaint the panel
         repaint();
     }
 
@@ -90,7 +79,6 @@ public class GravitySimulation extends JPanel implements ActionListener {
     }
 
     private void drawGravitationalField(Graphics2D g, List<Planet> planets) {
-        // Grid parameters
         int gridSpacing = 15; // 25 = standard
         double maxVectorLength = 50; // 50 = standard
         double maxInfluenceDistance = 300; // 300 == standard
@@ -110,9 +98,7 @@ public class GravitySimulation extends JPanel implements ActionListener {
                     double distance = Math.sqrt(dx * dx + dy * dy);
 
                     // Only consider planets within influence distance
-                    if (distance > maxInfluenceDistance) {
-                        continue;
-                    }
+                    if (distance > maxInfluenceDistance) continue;
 
                     // Calculate gravitational force
                     double force = G * planet.mass / (distance * distance);
@@ -145,7 +131,6 @@ public class GravitySimulation extends JPanel implements ActionListener {
         }
     }
 
-    // Planet class
     private static class Planet {
         double x;
         double y;
@@ -166,11 +151,9 @@ public class GravitySimulation extends JPanel implements ActionListener {
         }
 
         public void updatePosition(double accelerationX, double accelerationY, double dt) {
-            // Update velocity
             velocityX += accelerationX * dt;
             velocityY += accelerationY * dt;
 
-            // Update position
             x += velocityX * dt;
             y += velocityY * dt;
         }
