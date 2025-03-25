@@ -23,7 +23,7 @@ public class GravitySimulation extends JPanel implements ActionListener {
         planets.add(new Planet((double) WIDTH / 3, (double) HEIGHT / 2, 1e15, 0, 10, LIGHT_GRAY));
         planets.add(new Planet((double) (2 * WIDTH) / 3, (double) HEIGHT / 2, 1e15, 0, -10, LIGHT_GRAY));
 
-        Timer timer = new Timer(16, this); // 16 = standard
+        Timer timer = new Timer(4, this); // 16 = standard
         timer.start();
     }
 
@@ -46,9 +46,10 @@ public class GravitySimulation extends JPanel implements ActionListener {
                 // Calculate gravitational acceleration
                 double[] accelerations = calculateGravitationalForce(planets.get(i), planets.get(j));
 
-                // Update planet velocities
-                planets.get(i).updatePosition(accelerations[0], accelerations[1], 0.1);
-                planets.get(j).updatePosition(accelerations[2], accelerations[3], 0.1);
+                double dt = 0.05;
+                planets.get(i).updatePosition(accelerations[0], accelerations[1], dt);
+                planets.get(j).updatePosition(accelerations[2], accelerations[3], dt);
+
             }
         }
 
