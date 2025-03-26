@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GravitySimulation extends JPanel implements ActionListener, ComponentListener {
-    private static final int WIDTH = 800; // 800 = standard
-    private static final int HEIGHT = 600; // 600 = standard
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
 
     private static final Color vectorColor = Color.LIGHT_GRAY;
     private static final Color circleColor = Color.LIGHT_GRAY;
@@ -14,7 +14,7 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
 
     private static final double G = 6.67430e-11; // 6.67430e-11 = standard
 
-    private static final int PLANET_OFFSET = 100; // 150 = standard , 100 = cool
+    private static final int PLANET_OFFSET = 100;
 
     private final List<Planet> planets;
     private int centerX;
@@ -31,7 +31,7 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
         planets.add(new Planet(centerX - PLANET_OFFSET, centerY, 1e15, 0, 10, circleColor));
         planets.add(new Planet(centerX + PLANET_OFFSET, centerY, 1e15, 0, -10, circleColor));
 
-        Timer timer = new Timer(4, this); // 16 = standard
+        Timer timer = new Timer(4, this);
         timer.start();
 
         // Add component listener to detect resize events
@@ -107,9 +107,9 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
     }
 
     private void drawGravitationalField(Graphics2D g, List<Planet> planets) {
-        int gridSpacing = 15; // 15 = standard
-        double maxVectorLength = 50; // 50 = standard
-        double maxInfluenceDistance = 300; // 300 == standard
+        int gridSpacing = 15;
+        double maxVectorLength = 50;
+        double maxInfluenceDistance = 300;
 
         g.setColor(vectorColor);
 
@@ -196,7 +196,7 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
             this.velocityX = velocityX;
             this.velocityY = velocityY;
             this.color = color;
-            this.radius = (int) (Math.log(mass) * 2); // Adjust size based on mass
+            this.radius = (int) (Math.log(mass) * 2);
         }
 
         public void updatePosition(double accelerationX, double accelerationY, double dt) {
