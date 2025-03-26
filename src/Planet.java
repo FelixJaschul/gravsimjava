@@ -1,5 +1,6 @@
 import java.awt.*;
 
+// Planet class - needed for both type of Simulations
 public class Planet {
     double x;
     double y;
