@@ -9,7 +9,8 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
     private static final int HEIGHT = 600;
 
     private static final Color backgroundColor = Color.WHITE;
-    private static final Color LIGHT_GRAY = Color.LIGHT_GRAY;
+    private static final Color highlightColor = Color.LIGHT_GRAY;
+    private static final Color textColor = Color.BLACK;
 
     // Adjustable parameters
     private double G = 6.67430e-11; // 6.67430e-11 = standard
@@ -27,8 +28,6 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
     private final Timer timer;
     private boolean isRunning = true;
     private JPopupMenu popupMenu;
-    private final Color highlightColor = LIGHT_GRAY;
-    private int DELAY = 4;
 
     public GravitySimulationMenu() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -40,6 +39,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         planets = new ArrayList<>();
         resetPlanets();
 
+        int DELAY = 4;
         timer = new Timer(DELAY, this);
         timer.start();
 
@@ -51,16 +51,12 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    showPopupMenu(e);
-                }
+                if (e.isPopupTrigger()) showPopupMenu(e);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    showPopupMenu(e);
-                }
+                if (e.isPopupTrigger()) showPopupMenu(e);
             }
         });
     }
@@ -91,11 +87,8 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 setOpaque(false);
 
                 // Make all components in the popup non-opaque
-                for (Component component : getComponents()) {
-                    if (component instanceof JComponent) {
-                        ((JComponent) component).setOpaque(false);
-                    }
-                }
+                for (Component component : getComponents())
+                    if (component instanceof JComponent) ((JComponent) component).setOpaque(false);
 
                 super.show(invoker, x, y);
             }
@@ -113,54 +106,32 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         // Gravitational constant
         JMenuItem gravityItem = createStyledMenuItem("Gravitational Constant");
         gravityItem.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(this, 
-                "Enter gravitational constant (current: " + G + ")", 
-                G);
+            String input = JOptionPane.showInputDialog(this, "Enter gravitational constant (current: " + G + ")", G);
             if (input != null && !input.isEmpty()) {
-                try {
-                    double newValue = Double.parseDouble(input);
-                    if (newValue > 0) {
-                        G = newValue;
-                    }
-                } catch (NumberFormatException ex) {
-                    // Ignore invalid input
-                }
+                double newValue = Double.parseDouble(input);
+                if (newValue > 0) G = newValue;
             }
         });
         
         // Time step
         JMenuItem timeStepItem = createStyledMenuItem("Time Step");
         timeStepItem.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(this, 
-                "Enter time step (current: " + timeStep + ")", 
-                timeStep);
+            String input = JOptionPane.showInputDialog(this, "Enter time step (current: " + timeStep + ")", timeStep);
             if (input != null && !input.isEmpty()) {
-                try {
-                    double newValue = Double.parseDouble(input);
-                    if (newValue > 0) {
-                        timeStep = newValue;
-                    }
-                } catch (NumberFormatException ex) {
-                    // Ignore invalid input
-                }
+                double newValue = Double.parseDouble(input);
+                if (newValue > 0) timeStep = newValue;
             }
         });
         
         // Planet mass
         JMenuItem massItem = createStyledMenuItem("Planet Mass");
         massItem.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(this, 
-                "Enter planet mass (current: " + planetMass + ")", 
-                planetMass);
+            String input = JOptionPane.showInputDialog(this, "Enter planet mass (current: " + planetMass + ")", planetMass);
             if (input != null && !input.isEmpty()) {
-                try {
-                    double newValue = Double.parseDouble(input);
-                    if (newValue > 0) {
-                        planetMass = newValue;
-                        resetPlanets();
-                    }
-                } catch (NumberFormatException ex) {
-                    // Ignore invalid input
+                double newValue = Double.parseDouble(input);
+                if (newValue > 0) {
+                    planetMass = newValue;
+                    resetPlanets();
                 }
             }
         });
@@ -168,16 +139,10 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         // Initial velocity
         JMenuItem velocityItem = createStyledMenuItem("Initial Velocity");
         velocityItem.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(this, 
-                "Enter initial velocity (current: " + initialVelocity + ")", 
-                initialVelocity);
+            String input = JOptionPane.showInputDialog(this, "Enter initial velocity (current: " + initialVelocity + ")", initialVelocity);
             if (input != null && !input.isEmpty()) {
-                try {
-                    initialVelocity = Double.parseDouble(input);
-                    resetPlanets();
-                } catch (NumberFormatException ex) {
-                    // Ignore invalid input
-                }
+                initialVelocity = Double.parseDouble(input);
+                resetPlanets();
             }
         });
         
@@ -193,203 +158,52 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         // Grid spacing
         JMenuItem gridItem = createStyledMenuItem("Grid Spacing");
         gridItem.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(this, 
-                "Enter grid spacing (current: " + gridSpacing + ")", 
-                gridSpacing);
+            String input = JOptionPane.showInputDialog(this, "Enter grid spacing (current: " + gridSpacing + ")", gridSpacing);
             if (input != null && !input.isEmpty()) {
-                try {
-                    int newValue = Integer.parseInt(input);
-                    if (newValue > 0) {
-                        gridSpacing = newValue;
-                    }
-                } catch (NumberFormatException ex) {
-                    // Ignore invalid input
-                }
+                int newValue = Integer.parseInt(input);
+                if (newValue > 0) gridSpacing = newValue;
             }
         });
         
         // Vector length
         JMenuItem vectorLengthItem = createStyledMenuItem("Max Vector Length");
         vectorLengthItem.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(this, 
-                "Enter maximum vector length (current: " + maxVectorLength + ")", 
-                maxVectorLength);
+            String input = JOptionPane.showInputDialog(this, "Enter maximum vector length (current: " + maxVectorLength + ")", maxVectorLength);
             if (input != null && !input.isEmpty()) {
-                try {
-                    double newValue = Double.parseDouble(input);
-                    if (newValue > 0) {
-                        maxVectorLength = newValue;
-                    }
-                } catch (NumberFormatException ex) {
-                    // Ignore invalid input
-                }
+                double newValue = Double.parseDouble(input);
+                if (newValue > 0) maxVectorLength = newValue;
             }
         });
         
         // Influence distance
         JMenuItem influenceItem = createStyledMenuItem("Max Influence Distance");
         influenceItem.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(this, 
-                "Enter maximum influence distance (current: " + maxInfluenceDistance + ")", 
-                maxInfluenceDistance);
+            String input = JOptionPane.showInputDialog(this, "Enter maximum influence distance (current: " + maxInfluenceDistance + ")", maxInfluenceDistance);
             if (input != null && !input.isEmpty()) {
-                try {
-                    double newValue = Double.parseDouble(input);
-                    if (newValue > 0) {
-                        maxInfluenceDistance = newValue;
-                    }
-                } catch (NumberFormatException ex) {
-                    // Ignore invalid input
-                }
+                double newValue = Double.parseDouble(input);
+                if (newValue > 0) maxInfluenceDistance = newValue;
             }
         });
         
         // Planet offset
         JMenuItem offsetItem = createStyledMenuItem("Planet Offset");
         offsetItem.addActionListener(e -> {
-            String input = JOptionPane.showInputDialog(this, 
-                "Enter planet offset from center (current: " + PLANET_OFFSET + ")", 
-                PLANET_OFFSET);
+            String input = JOptionPane.showInputDialog(this, "Enter planet offset from center (current: " + PLANET_OFFSET + ")", PLANET_OFFSET);
             if (input != null && !input.isEmpty()) {
-                try {
-                    int newValue = Integer.parseInt(input);
-                    if (newValue > 0) {
-                        PLANET_OFFSET = newValue;
-                        resetPlanets();
-                    }
-                } catch (NumberFormatException ex) {
-                    // Ignore invalid input
+                int newValue = Integer.parseInt(input);
+                if (newValue > 0) {
+                    PLANET_OFFSET = newValue;
+                    resetPlanets();
                 }
             }
         });
-        
-        // Animation delay
-        JMenuItem delayItem = createStyledMenuItem("Animation Delay");
-        delayItem.addActionListener(e -> {
-            // Create a custom input dialog for delay setting
-            JDialog delayDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Set Animation Delay", true);
-            delayDialog.setLayout(new BorderLayout());
-            delayDialog.setSize(350, 180);
-            delayDialog.setMinimumSize(new Dimension(300, 150));
-            delayDialog.setLocationRelativeTo(this);
 
-            // Create main content panel with a more flexible layout
-            JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
-            contentPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 10, 15));
-
-            // Create a styled panel for the input field
-            JPanel inputPanel = new JPanel(new BorderLayout(5, 5));
-            inputPanel.setBackground(new Color(245, 245, 245));
-            inputPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 220, 220), 1, true),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
-            ));
-
-            // Create a label explaining what the delay is
-            JLabel label = new JLabel("Enter delay in milliseconds (1-1000):");
-            label.setFont(label.getFont().deriveFont(Font.BOLD));
-
-            // Create a text field with the current delay as default
-            JTextField delayField = new JTextField(String.valueOf(DELAY), 10);
-            delayField.setFont(new Font("SansSerif", Font.PLAIN, 14));
-            delayField.setHorizontalAlignment(JTextField.CENTER);
-
-            // Add a hint about what the delay affects
-            JLabel hintLabel = new JLabel("Lower values = faster animation");
-            hintLabel.setFont(hintLabel.getFont().deriveFont(Font.ITALIC, 11f));
-            hintLabel.setForeground(new Color(100, 100, 100));
-
-            // Create a panel for the buttons with some spacing
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
-            buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-            buttonPanel.setOpaque(false);
-
-            // Create Apply and Cancel buttons with consistent sizing
-            JButton applyButton = new JButton("Apply");
-            JButton cancelButton = new JButton("Cancel");
-
-            // Make buttons the same size
-            Dimension buttonSize = new Dimension(100, 30);
-            applyButton.setPreferredSize(buttonSize);
-            cancelButton.setPreferredSize(buttonSize);
-
-            // Add action listener to Apply button
-            applyButton.addActionListener(event -> {
-                try {
-                    // Parse the input value
-                    int newDelay = Integer.parseInt(delayField.getText().trim());
-
-                    // Validate the input (ensure it's within reasonable bounds)
-                    if (newDelay >= 1 && newDelay <= 1000) {
-                        // Update the delay
-                        DELAY = newDelay;
-
-                        // Update the timer delay
-                        timer.setDelay(DELAY);
-
-                        // Close the dialog
-                        delayDialog.dispose();
-                    } else {
-                        // Show error message for invalid range
-                        JOptionPane.showMessageDialog(delayDialog,
-                            "Please enter a value between 1 and 1000.",
-                            "Invalid Input",
-                            JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (NumberFormatException ex) {
-                    // Show error message for invalid input
-                    JOptionPane.showMessageDialog(delayDialog,
-                        "Please enter a valid number.",
-                        "Invalid Input",
-                        JOptionPane.ERROR_MESSAGE);
-                }
-            });
-
-            // Add action listener to Cancel button
-            cancelButton.addActionListener(event -> delayDialog.dispose());
-
-            // Add glue to push buttons to the right
-            buttonPanel.add(Box.createHorizontalGlue());
-            buttonPanel.add(applyButton);
-            buttonPanel.add(Box.createRigidArea(new Dimension(10, 0))); // Space between buttons
-            buttonPanel.add(cancelButton);
-
-            // Add components to the input panel
-            JPanel labelPanel = new JPanel(new BorderLayout());
-            labelPanel.setOpaque(false);
-            labelPanel.add(label, BorderLayout.NORTH);
-            labelPanel.add(Box.createRigidArea(new Dimension(0, 5)), BorderLayout.CENTER);
-            labelPanel.add(hintLabel, BorderLayout.SOUTH);
-
-            inputPanel.add(labelPanel, BorderLayout.NORTH);
-            inputPanel.add(delayField, BorderLayout.CENTER);
-
-            // Add panels to the content panel
-            contentPanel.add(inputPanel, BorderLayout.CENTER);
-            contentPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-            // Add content panel to dialog
-            delayDialog.add(contentPanel, BorderLayout.CENTER);
-
-            // Set default button and focus
-            delayDialog.getRootPane().setDefaultButton(applyButton);
-            delayField.requestFocusInWindow();
-
-            // Select all text in the field for easy editing
-            delayField.selectAll();
-
-            // Show the dialog
-            delayDialog.setVisible(true);
-        });
-        
         // Add visualization items to visualization menu
         visualizationMenu.add(gridItem);
         visualizationMenu.add(vectorLengthItem);
         visualizationMenu.add(influenceItem);
         visualizationMenu.add(offsetItem);
-        visualizationMenu.add(delayItem);
-        
+
         // Add submenus to settings menu
         settingsMenu.add(physicsMenu);
         settingsMenu.add(visualizationMenu);
@@ -434,7 +248,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 }
 
                 // Draw text
-                g2d.setColor(new Color(50, 50, 50));
+                g2d.setColor(textColor);
                 FontMetrics fm = g2d.getFontMetrics();
                 int x = 10;
                 int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
@@ -444,8 +258,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
             }
         };
 
-        // Set foreground color (not used in paintComponent but helps with UI manager)
-        item.setForeground(new Color(50, 50, 50));
+        item.setForeground(highlightColor);
 
         // Remove default background and border
         item.setOpaque(false);
@@ -474,7 +287,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 }
 
                 // Draw text
-                g2d.setColor(new Color(50, 50, 50));
+                g2d.setColor(textColor);
                 FontMetrics fm = g2d.getFontMetrics();
                 int x = 10;
                 int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
@@ -485,7 +298,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         };
 
         // Set foreground color
-        menu.setForeground(new Color(50, 50, 50));
+        menu.setForeground(highlightColor);
 
         // Remove default background and border
         menu.setOpaque(false);
@@ -500,7 +313,6 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         subMenu.setOpaque(false);
         subMenu.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        // Apply Apple-like styling to the submenu
         subMenu.setUI(new javax.swing.plaf.basic.BasicPopupMenuUI() {
             @Override
             public void paint(Graphics g, JComponent c) {
@@ -508,7 +320,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 // white background
-                g2d.setColor(new Color(255, 255, 255, 240));
+                g2d.setColor(backgroundColor);
                 g2d.fillRect(0, 0, c.getWidth(), c.getHeight());
 
                 // Add a subtle border
@@ -549,10 +361,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
     }
     
     private void showPopupMenu(MouseEvent e) {
-        // Recreate the popup menu to ensure it's updated with current state
         createPopupMenu();
-        
-        // Show the popup menu at the mouse position
         popupMenu.show(e.getComponent(), e.getX(), e.getY());
     }
     
@@ -570,8 +379,8 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
     private void resetPlanets() {
         planets.clear();
         // Position planets relative to center with current settings
-        planets.add(new Planet(centerX - PLANET_OFFSET, centerY, planetMass, 0, initialVelocity, LIGHT_GRAY));
-        planets.add(new Planet(centerX + PLANET_OFFSET, centerY, planetMass, 0, -initialVelocity, LIGHT_GRAY));
+        planets.add(new Planet(centerX - PLANET_OFFSET, centerY, planetMass, 0, initialVelocity, highlightColor));
+        planets.add(new Planet(centerX + PLANET_OFFSET, centerY, planetMass, 0, -initialVelocity, highlightColor));
     }
 
     @Override
@@ -610,10 +419,8 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         repaint();
     }
 
-    // Method to reposition planets around the center
     private void repositionPlanets() {
-        if (planets.size() >= 2) {
-            // Reposition the first two planets (you can extend this for more planets)
+        if (planets.size() >= 2) { // 2 := Planet Count
             planets.getFirst().x = centerX - PLANET_OFFSET;
             planets.getFirst().y = centerY;
             planets.get(0).velocityX = 0; // Reset velocity
@@ -650,7 +457,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
     }
 
     private void drawGravitationalField(Graphics2D g, List<Planet> planets) {
-        g.setColor(LIGHT_GRAY);
+        g.setColor(highlightColor);
 
         int width = getWidth();
         int height = getHeight();
@@ -701,7 +508,6 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         }
     }
 
-    // ComponentListener methods
     @Override
     public void componentResized(ComponentEvent e) {
         centerX = getWidth() / 2;
@@ -755,7 +561,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Gravity Simulation with Menu");
+            JFrame frame = new JFrame("Gravity Simulation");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setResizable(true);
             frame.add(new GravitySimulationMenu());
