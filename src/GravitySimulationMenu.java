@@ -60,7 +60,97 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
             }
         });
     }
-    
+
+    private void repositionPlanets() {
+        if (planets.size() >= 2) { // 2 := Planet Count
+            planets.getFirst().x = centerX - PLANET_OFFSET;
+            planets.getFirst().y = centerY;
+            planets.get(0).velocityX = 0; // Reset velocity
+            planets.get(0).velocityY = initialVelocity; // Reset to initial velocity
+
+            planets.get(1).x = centerX + PLANET_OFFSET;
+            planets.get(1).y = centerY;
+            planets.get(1).velocityX = 0; // Reset velocity
+            planets.get(1).velocityY = -initialVelocity; // Reset to initial velocity
+        }
+    }
+
+    private double[] calculateGravitationalForce(Planet planet1, Planet planet2) {
+        // Calculate distance between planets
+        double dx = planet2.x - planet1.x;
+        double dy = planet2.y - planet1.y;
+
+        // Avoid division by zero
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < 1) distance = 1;
+
+        // Calculate gravitational force
+        double force = G * planet1.mass * planet2.mass / (distance * distance);
+
+        // Calculate acceleration components
+        double angle = Math.atan2(dy, dx);
+        double acceleration1X = force * Math.cos(angle) / planet1.mass;
+        double acceleration1Y = force * Math.sin(angle) / planet1.mass;
+
+        double acceleration2X = -force * Math.cos(angle) / planet2.mass;
+        double acceleration2Y = -force * Math.sin(angle) / planet2.mass;
+
+        return new double[] {acceleration1X, acceleration1Y, acceleration2X, acceleration2Y};
+    }
+
+    private void drawGravitationalField(Graphics2D g, List<Planet> planets) {
+        g.setColor(highlightColor);
+
+        int width = getWidth();
+        int height = getHeight();
+
+        for (int x = 0; x < width; x += gridSpacing) {
+            for (int y = 0; y < height; y += gridSpacing) {
+                double totalFx = 0;
+                double totalFy = 0;
+
+                // Calculate gravitational influence from each planet
+                for (Planet planet : planets) {
+                    double dx = planet.x - x;
+                    double dy = planet.y - y;
+
+                    double distance = Math.sqrt(dx * dx + dy * dy);
+
+                    // Only consider planets within influence distance
+                    if (distance > maxInfluenceDistance) continue;
+
+                    // Calculate gravitational force
+                    double force = G * planet.mass / (distance * distance);
+
+                    // Calculate direction
+                    double angle = Math.atan2(dy, dx);
+                    double fx = force * Math.cos(angle);
+                    double fy = force * Math.sin(angle);
+
+                    totalFx += fx;
+                    totalFy += fy;
+                }
+
+                // Normalize and scale vector
+                double magnitude = Math.sqrt(totalFx * totalFx + totalFy * totalFy);
+                if (magnitude > 0) {
+                    // Limit vector length
+                    magnitude = Math.min(magnitude, maxVectorLength);
+
+                    double nx = totalFx / Math.sqrt(totalFx * totalFx + totalFy * totalFy);
+                    double ny = totalFy / Math.sqrt(totalFx * totalFx + totalFy * totalFy);
+
+                    // Draw vector
+                    int endX = (int) (x + nx * magnitude);
+                    int endY = (int) (y + ny * magnitude);
+
+                    g.drawLine(x, y, endX, endY);
+                }
+            }
+        }
+    }
+
+    // SwingUI PopupMenu Implementation
     private void createPopupMenu() {
         // Creates Pop Up Menu for Settings, ...
         popupMenu = new JPopupMenu() {
@@ -99,10 +189,10 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
 
         // Settings menu
         JMenu settingsMenu = createStyledMenu("Settings");
-        
+
         // Physics submenu
         JMenu physicsMenu = createStyledMenu("Physics");
-        
+
         // Gravitational constant
         JMenuItem gravityItem = createStyledMenuItem("Gravitational Constant");
         gravityItem.addActionListener(e -> {
@@ -112,7 +202,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 if (newValue > 0) G = newValue;
             }
         });
-        
+
         // Time step
         JMenuItem timeStepItem = createStyledMenuItem("Time Step");
         timeStepItem.addActionListener(e -> {
@@ -122,7 +212,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 if (newValue > 0) timeStep = newValue;
             }
         });
-        
+
         // Planet mass
         JMenuItem massItem = createStyledMenuItem("Planet Mass");
         massItem.addActionListener(e -> {
@@ -135,7 +225,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 }
             }
         });
-        
+
         // Initial velocity
         JMenuItem velocityItem = createStyledMenuItem("Initial Velocity");
         velocityItem.addActionListener(e -> {
@@ -145,16 +235,16 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 resetPlanets();
             }
         });
-        
+
         // Add physics items to physics menu
         physicsMenu.add(gravityItem);
         physicsMenu.add(timeStepItem);
         physicsMenu.add(massItem);
         physicsMenu.add(velocityItem);
-        
+
         // Visualization submenu
         JMenu visualizationMenu = createStyledMenu("Visualization");
-        
+
         // Grid spacing
         JMenuItem gridItem = createStyledMenuItem("Grid Spacing");
         gridItem.addActionListener(e -> {
@@ -164,7 +254,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 if (newValue > 0) gridSpacing = newValue;
             }
         });
-        
+
         // Vector length
         JMenuItem vectorLengthItem = createStyledMenuItem("Max Vector Length");
         vectorLengthItem.addActionListener(e -> {
@@ -174,7 +264,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 if (newValue > 0) maxVectorLength = newValue;
             }
         });
-        
+
         // Influence distance
         JMenuItem influenceItem = createStyledMenuItem("Max Influence Distance");
         influenceItem.addActionListener(e -> {
@@ -184,7 +274,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
                 if (newValue > 0) maxInfluenceDistance = newValue;
             }
         });
-        
+
         // Planet offset
         JMenuItem offsetItem = createStyledMenuItem("Planet Offset");
         offsetItem.addActionListener(e -> {
@@ -207,31 +297,31 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         // Add submenus to settings menu
         settingsMenu.add(physicsMenu);
         settingsMenu.add(visualizationMenu);
-        
+
         // Custom separator with Apple-like styling
         JSeparator separator = createStyledSeparator();
-        
+
         // Start/Pause menu item
         JMenuItem startPauseItem = createStyledMenuItem(isRunning ? "Pause" : "Start");
         startPauseItem.addActionListener(e -> {
             toggleRunning();
             popupMenu.setVisible(false);
         });
-        
+
         // Restart menu item
         JMenuItem restartItem = createStyledMenuItem("Restart");
         restartItem.addActionListener(e -> {
             resetPlanets();
             popupMenu.setVisible(false);
         });
-        
+
         // Add all items to the popup menu
         popupMenu.add(settingsMenu);
         popupMenu.add(separator);
         popupMenu.add(startPauseItem);
         popupMenu.add(restartItem);
     }
-    
+
     // Helper method to create styled menu items
     private JMenuItem createStyledMenuItem(String text) {
         JMenuItem item = new JMenuItem(text) {
@@ -359,12 +449,12 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
 
         return separator;
     }
-    
+
     private void showPopupMenu(MouseEvent e) {
         createPopupMenu();
         popupMenu.show(e.getComponent(), e.getX(), e.getY());
     }
-    
+
     private void toggleRunning() {
         if (isRunning) {
             timer.stop();
@@ -375,7 +465,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         }
         repaint();
     }
-    
+
     private void resetPlanets() {
         planets.clear();
         // Position planets relative to center with current settings
@@ -392,7 +482,7 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         drawGravitationalField(g2d, planets);
 
         for (Planet planet : planets) planet.draw(g2d);
-        
+
         // Draw a green circle if simulation is running
         if (isRunning) {
             int radius = 5;
@@ -419,95 +509,6 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
         repaint();
     }
 
-    private void repositionPlanets() {
-        if (planets.size() >= 2) { // 2 := Planet Count
-            planets.getFirst().x = centerX - PLANET_OFFSET;
-            planets.getFirst().y = centerY;
-            planets.get(0).velocityX = 0; // Reset velocity
-            planets.get(0).velocityY = initialVelocity; // Reset to initial velocity
-
-            planets.get(1).x = centerX + PLANET_OFFSET;
-            planets.get(1).y = centerY;
-            planets.get(1).velocityX = 0; // Reset velocity
-            planets.get(1).velocityY = -initialVelocity; // Reset to initial velocity
-        }
-    }
-
-    private double[] calculateGravitationalForce(Planet planet1, Planet planet2) {
-        // Calculate distance between planets
-        double dx = planet2.x - planet1.x;
-        double dy = planet2.y - planet1.y;
-
-        // Avoid division by zero
-        double distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 1) distance = 1;
-
-        // Calculate gravitational force
-        double force = G * planet1.mass * planet2.mass / (distance * distance);
-
-        // Calculate acceleration components
-        double angle = Math.atan2(dy, dx);
-        double acceleration1X = force * Math.cos(angle) / planet1.mass;
-        double acceleration1Y = force * Math.sin(angle) / planet1.mass;
-
-        double acceleration2X = -force * Math.cos(angle) / planet2.mass;
-        double acceleration2Y = -force * Math.sin(angle) / planet2.mass;
-
-        return new double[] {acceleration1X, acceleration1Y, acceleration2X, acceleration2Y};
-    }
-
-    private void drawGravitationalField(Graphics2D g, List<Planet> planets) {
-        g.setColor(highlightColor);
-
-        int width = getWidth();
-        int height = getHeight();
-
-        for (int x = 0; x < width; x += gridSpacing) {
-            for (int y = 0; y < height; y += gridSpacing) {
-                double totalFx = 0;
-                double totalFy = 0;
-
-                // Calculate gravitational influence from each planet
-                for (Planet planet : planets) {
-                    double dx = planet.x - x;
-                    double dy = planet.y - y;
-
-                    double distance = Math.sqrt(dx * dx + dy * dy);
-
-                    // Only consider planets within influence distance
-                    if (distance > maxInfluenceDistance) continue;
-
-                    // Calculate gravitational force
-                    double force = G * planet.mass / (distance * distance);
-
-                    // Calculate direction
-                    double angle = Math.atan2(dy, dx);
-                    double fx = force * Math.cos(angle);
-                    double fy = force * Math.sin(angle);
-
-                    totalFx += fx;
-                    totalFy += fy;
-                }
-
-                // Normalize and scale vector
-                double magnitude = Math.sqrt(totalFx * totalFx + totalFy * totalFy);
-                if (magnitude > 0) {
-                    // Limit vector length
-                    magnitude = Math.min(magnitude, maxVectorLength);
-
-                    double nx = totalFx / Math.sqrt(totalFx * totalFx + totalFy * totalFy);
-                    double ny = totalFy / Math.sqrt(totalFx * totalFx + totalFy * totalFy);
-
-                    // Draw vector
-                    int endX = (int) (x + nx * magnitude);
-                    int endY = (int) (y + ny * magnitude);
-
-                    g.drawLine(x, y, endX, endY);
-                }
-            }
-        }
-    }
-
     @Override
     public void componentResized(ComponentEvent e) {
         centerX = getWidth() / 2;
@@ -524,40 +525,6 @@ public class GravitySimulationMenu extends JPanel implements ActionListener, Com
 
     @Override
     public void componentHidden(ComponentEvent e) {}
-
-    private static class Planet {
-        double x;
-        double y;
-        double mass;
-        double velocityX;
-        double velocityY;
-        Color color;
-        int radius;
-
-        public Planet(double x, double y, double mass, double velocityX, double velocityY, Color color) {
-            this.x = x;
-            this.y = y;
-            this.mass = mass;
-            this.velocityX = velocityX;
-            this.velocityY = velocityY;
-            this.color = color;
-            this.radius = (int) (Math.log(mass) * 2);
-        }
-
-        public void updatePosition(double accelerationX, double accelerationY, double dt) {
-            velocityX += accelerationX * dt;
-            velocityY += accelerationY * dt;
-
-            x += velocityX * dt;
-            y += velocityY * dt;
-        }
-
-        public void draw(Graphics2D g) {
-            g.setColor(color);
-            int drawRadius = Math.max((radius / 2), 3);
-            g.fillOval((int) x - drawRadius, (int) y - drawRadius, drawRadius * 2, drawRadius * 2);
-        }
-    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
