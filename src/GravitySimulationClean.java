@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GravitySimulation extends JPanel implements ActionListener, ComponentListener {
+public class GravitySimulationClean extends JPanel implements ActionListener, ComponentListener {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
 
@@ -20,7 +20,7 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
     private int centerX;
     private int centerY;
 
-    public GravitySimulation() {
+    public GravitySimulationClean() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(backgroundColor);
 
@@ -219,7 +219,7 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
             JFrame frame = new JFrame("Gravity Simulation");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setResizable(true);
-            frame.add(new GravitySimulation());
+            frame.add(new GravitySimulationClean());
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
