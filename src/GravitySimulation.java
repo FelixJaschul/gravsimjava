@@ -14,7 +14,7 @@ public class GravitySimulation extends JPanel implements ActionListener, Compone
 
     private static final double G = 6.67430e-11; // 6.67430e-11 = standard
 
-    private static final int PLANET_OFFSET = 150;
+    private static final int PLANET_OFFSET = 100;
 
     private final List<Planet> planets;
     private int centerX;
